@@ -6,6 +6,8 @@ import re
 import logging
 import mysql.connector
 from typing import List
+from mysql.connector import Error
+from filtered_logger import RedactingFormatter
 
 
 patterns = {
