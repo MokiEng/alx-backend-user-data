@@ -56,31 +56,29 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 def main():
     """Configure logging
     """
-   logger = logging.getLogger("user_data")
+    logger = get_logger()
     logger.setLevel(logging.INFO)
-    logger.propagate = False
 
-    formatter = RedactingFormatter(fields=("name", "email", "phone", "ssn", "password"))
     handler = logging.StreamHandler()
+    formatter = RedactingFormatter(fields=PII_FIELDS)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
     db = get_db()
-    if db is None:
-        return
-
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
 
-    for row in cursor:
-        log_data = "; ".join(
-            [f"{field}={formatter.REDACTION}" for field in logger.fields])
-        log_message = f"[HOLBERTON] user_data INFO {
-            row[6].strftime('%Y-%m-%d %H:%M:%S')}: {log_data};"
-        logger.info(log_message)
+    filtered_row_parts = []
+    for field, value in zip(cursor.column_names, row):
+        if field in PII_FIELDS:
+            filtered_row_parts.append(f"{field}=***")
+        else:
+            filtered_row_parts.append(f"{field}={value}")
+    filtered_row = "; ".join(filtered_row_parts)
 
     cursor.close()
     db.close()
+
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class."""
