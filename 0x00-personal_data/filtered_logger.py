@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""A module for filtering logs.
-"""
+"""A module for Personal data's project"""
 import os
 import re
 import logging
@@ -18,8 +17,7 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 def filter_datum(
         fields: List[str], redaction: str, message: str, separator: str,
         ) -> str:
-    """Filters a log line.
-    """
+    """Filters a log line."""
     extract, replace = (patterns["extract"], patterns["replace"])
     return re.sub(extract(fields, separator), replace(redaction), message)
 
@@ -76,8 +74,7 @@ def main():
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-    """
+    """ Redacting Formatter class."""
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
