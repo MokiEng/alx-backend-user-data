@@ -1,3 +1,5 @@
+0x01. Basic authentication
+
 Authentication is the process of verifying the identity of a person, system, or entity trying to access a particular resource, system, or service. It is a fundamental concept in computer security and is used to ensure that only authorized individuals or entities are granted access to protected resources, such as computer systems, databases, websites, or physical locations. Authentication serves to answer the question: "Who are you?"
 
 Key aspects of authentication include:
