@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Route module for the API.
-"""
+"""Route module for basic-API."""
 import os
 from os import getenv
 from flask import Flask, jsonify, abort, request
@@ -31,15 +30,13 @@ def not_found(error) -> str:
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """Unauthorized handler.
-    """
+    """Unauthorized handler."""
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error) -> str:
-    """Forbidden handler.
-    """
+    """Forbidden handler."""
     return jsonify({"error": "Forbidden"}), 403
 
 
@@ -60,7 +57,6 @@ def authenticate_user():
                 abort(401)
             if user is None:
                 abort(403)
-
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
