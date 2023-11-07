@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Basic authentication module for the API.
-"""
+"""Basic authentication module."""
 import re
 import base64
 import binascii
@@ -65,7 +64,7 @@ class BasicAuth(Auth):
             self,
             user_email: str,
             user_pwd: str) -> TypeVar('User'):
-        """Retrieves a user based on the user's authentication credentials.
+        """A method returns the User instance based on his email and password
         """
         if type(user_email) == str and type(user_pwd) == str:
             try:
