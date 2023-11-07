@@ -31,25 +31,24 @@ class BasicAuth(Auth):
             self,
             base64_authorization_header: str,
             ) -> str:
-        """Decodes a base64-encoded authorization header.
+        """A method that returns the decoded value of a Base64 string.
         """
-        if type(base64_authorization_header) == str:
-            try:
-                res = base64.b64decode(
-                    base64_authorization_header,
-                    validate=True,
-                )
-                return res.decode('utf-8')
-            except (binascii.Error, UnicodeDecodeError):
-                return None
+        if base64_authorization_header is None:
+            return None
+        if not isinstance(base64_authorization_header, str):
+            return None
+        try:
+            decoded_bytes = base64.b64decode(base64_authorization_header)
+            return decoded_bytes.decode('utf-8')
+        except:
+            return None
 
     def extract_user_credentials(
             self,
             decoded_base64_authorization_header: str,
             ) -> Tuple[str, str]:
         """Extracts user credentials from a base64-decoded authorization
-        header that uses the Basic authentication flow.
-        """
+        header that uses the Basic authentication flow."""
         if type(decoded_base64_authorization_header) == str:
             pattern = r'(?P<user>[^:]+):(?P<password>.+)'
             field_match = re.fullmatch(
