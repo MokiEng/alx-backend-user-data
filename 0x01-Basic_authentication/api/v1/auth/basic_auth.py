@@ -47,8 +47,8 @@ class BasicAuth(Auth):
             self,
             decoded_base64_authorization_header: str,
             ) -> Tuple[str, str]:
-        """Extracts user credentials from a base64-decoded authorization
-        header that uses the Basic authentication flow."""
+        """A method that returns the user email and password
+        from the Base64 decoded value."""
         if type(decoded_base64_authorization_header) == str:
             pattern = r'(?P<user>[^:]+):(?P<password>.+)'
             field_match = re.fullmatch(
