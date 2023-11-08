@@ -22,14 +22,14 @@ def stats() -> str:
     return jsonify(stats)
 
 
-@app.route('/api/v1/unauthorized', methods=['GET'])
-def unauthorized_endpoint():
+@app_views.route('/unauthorized/', strict_slashes=False)
+def unauthorized() -> None:
     """GET /api/v1/unauthorized
     """
     abort(401)
 
 
-@app.route('/api/v1/forbidden', methods=['GET'])
-def forbidden_endpoint():
+@app_views.route('/forbidden/', strict_slashes=False)
+def forbidden() -> None:
     """GET /api/v1/forbidden."""
     abort(403)
