@@ -7,8 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
-from typing import Any, Optional
-
 from user import Base, User
 
 
@@ -44,13 +42,19 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by given criteria
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
-                raise NoResultFound
-            return user
-        except InvalidRequestError:
-            raise InvalidRequestError("Invalid query argument")
+        fields, val = [], []
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                fields.append(getattr(User, key))
+                values.append(value)
+            else:
+                raise InvalidRequestError()
+        res = self._session.query(User).filter(
+            tuple_(*fields).in_([tuple(val)])
+        ).first()
+        if res is None:
+            raise NoResultFound()
+        return res
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user's attributes
