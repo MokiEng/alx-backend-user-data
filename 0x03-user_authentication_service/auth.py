@@ -96,7 +96,7 @@ class Auth:
     def update_password(self, reset_token: str, password: str) -> None:
         """Updates a user's password given the user's reset token.
         """
-         user = self._db.find_user_by(reset_token=reset_token)
+        user = self._db.find_user_by(reset_token=reset_token)
         if not user:
             raise ValueError("Invalid reset token")
 
