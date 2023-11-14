@@ -42,7 +42,7 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by given criteria
         """
-       fields, values = [], []
+        fields, values = [], []
         for key, value in kwargs.items():
             if hasattr(User, key):
                 fields.append(getattr(User, key))
