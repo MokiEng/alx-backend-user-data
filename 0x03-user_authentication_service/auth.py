@@ -42,17 +42,16 @@ class Auth:
 
     def valid_login(self, email: str, password: str) -> bool:
         """Validate user login."""
-        user = None
         try:
             user = self._db.find_user_by(email=email)
-            if user is not None:
-                return bcrypt.checkpw(
-                    password.encode("utf-8"),
-                    user.hashed_password,
-                )
-        except NoResultFound:
+            if bcrypt.checkpw(
+                password.encode('utf-8'),
+                user.hashed_password.encode('utf-8')):
+                return True
+            else:
+                return False
+        except Exception as e:
             return False
-        return False
 
     def create_session(self, email: str) -> str:
         """Creates a new session for a user.
