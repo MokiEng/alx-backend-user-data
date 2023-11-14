@@ -11,8 +11,7 @@ from user import User
 
 
 def _hash_password(password: str) -> bytes:
-    """Hash a password using bcrypt.
-    """
+    """Hash a password using bcrypt."""
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password
@@ -33,7 +32,7 @@ class Auth:
 
     def register_user(self, email: str, password: str) -> User:
         """Register a new user."""
-                try:
+        try:
             self._db.find_user_by(email=email)
         except NoResultFound:
             return self._db.add_user(email, _hash_password(password))
@@ -44,8 +43,8 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             if bcrypt.checkpw(
-                password.encode('utf-8'),
-                user.hashed_password.encode('utf-8')):
+                    password.encode('utf-8'),
+                    user.hashed_password.encode('utf-8')):
                 return True
             else:
                 return False
