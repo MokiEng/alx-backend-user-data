@@ -42,19 +42,19 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by given criteria
         """
-        fields, val = [], []
+       fields, values = [], []
         for key, value in kwargs.items():
             if hasattr(User, key):
                 fields.append(getattr(User, key))
                 values.append(value)
             else:
                 raise InvalidRequestError()
-        res = self._session.query(User).filter(
-            tuple_(*fields).in_([tuple(val)])
+        result = self._session.query(User).filter(
+            tuple_(*fields).in_([tuple(values)])
         ).first()
-        if res is None:
+        if result is None:
             raise NoResultFound()
-        return res
+        return result
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user's attributes
