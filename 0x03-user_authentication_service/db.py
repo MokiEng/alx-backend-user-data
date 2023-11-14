@@ -43,28 +43,27 @@ class DB:
     def find_user_by(self, **kwargs) -> User:
         """Find a user by given criteria
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
-                raise NoResultFound
-            return user
-        except InvalidRequestError:
-            raise InvalidRequestError("Invalid query argument")
-
-    def update_user(self, user_id: int, **kwargs) -> None:
-        """Updates a user based on a given id.
-        """
-        user = self.find_user_by(id=user_id)
-        if user is None:
-            return
-        update_source = {}
+        fields, values = [], []
         for key, value in kwargs.items():
             if hasattr(User, key):
-                update_source[getattr(User, key)] = value
+                fields.append(getattr(User, key))
+                values.append(value)
             else:
-                raise ValueError()
-        self._session.query(User).filter(User.id == user_id).update(
-            update_source,
-            synchronize_session=False,
-        )
+                raise InvalidRequestError()
+        result = self._session.query(User).filter(
+            tuple_(*fields).in_([tuple(values)])
+        ).first()
+        if result is None:
+            raise NoResultFound()
+        return result
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user's attributes
+        """
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                setattr(user, key, value)
+            else:
+                raise ValueError(f"Invalid argument: {key}")
         self._session.commit()
