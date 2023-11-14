@@ -41,21 +41,15 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs) -> User:
-        """Finds a user based on a set of filters.
+        """Find a user by given criteria
         """
-        fields, values = [], []
-        for key, value in kwargs.items():
-            if hasattr(User, key):
-                fields.append(getattr(User, key))
-                values.append(value)
-            else:
-                raise InvalidRequestError()
-        result = self._session.query(User).filter(
-            tuple_(*fields).in_([tuple(values)])
-        ).first()
-        if result is None:
-            raise NoResultFound()
-        return result
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound
+            return user
+        except InvalidRequestError:
+            raise InvalidRequestError("Invalid query argument")
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Updates a user based on a given id.
