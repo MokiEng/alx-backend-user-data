@@ -36,13 +36,20 @@ def login() -> str:
     Return:
         - The account login payload.
     """
-    email, password = request.form.get("email"), request.form.get("password")
-    if not AUTH.valid_login(email, password):
+   email = request.form.get('email')
+    password = request.form.get('password')
+
+    try:
+        user = AUTH.get_user(email)
+        if AUTH.valid_login(email, password):
+            session_id = AUTH.create_session(email)
+            response = jsonify({"email": email, "message": "logged in"})
+            response.set_cookie('session_id', session_id)
+            return response, 200
+        else:
+            abort(401)
+    except ValueError:
         abort(401)
-    session_id = AUTH.create_session(email)
-    response = jsonify({"email": email, "message": "logged in"})
-    response.set_cookie("session_id", session_id)
-    return response
 
 
 @app.route("/sessions", methods=["DELETE"], strict_slashes=False)
