@@ -36,7 +36,7 @@ def login() -> str:
     Return:
         - The account login payload.
     """
-   email = request.form.get('email')
+    email = request.form.get('email')
     password = request.form.get('password')
 
     try:
